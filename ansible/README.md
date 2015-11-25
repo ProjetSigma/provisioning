@@ -28,7 +28,6 @@ or (better) with private key authentification
 ```
 ansible all -m ping --user=XXXXXX --private-key=p.key --sudo --ask-sudo-pass
 ```
-
 3. Play a playbook
 ```
 ansible-playbook mysql_server_setup.yml [+authentification options]
