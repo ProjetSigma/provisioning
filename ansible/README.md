@@ -4,7 +4,6 @@ It combines multi-node software deployment, ad hoc task execution, and configura
 ## Ansible setup
 On debian
 ```
-sudo launchctl limit maxfiles 1024 2048
 sudo apt-get install software-properties-common
 sudo apt-add-repository ppa:ansible/ansible
 sudo apt-get update
