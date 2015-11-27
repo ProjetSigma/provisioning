@@ -1,0 +1,10 @@
+# Example script.
+# Setups MySQL server
+# Password is randomly generated
+# see roles/mysql_server_setup/defaults/main.yml for customization variables
+- hosts: local
+  roles:
+     - { role: mysql_server_setup
+        # ,mysql_root_password: 'secret'
+        # , ...
+       }

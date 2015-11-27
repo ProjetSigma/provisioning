@@ -1,0 +1,125 @@
+- name: Check if MySQL server is installed
+  stat:
+    path: '/usr/bin/mysqld_safe'
+  register: mysql_installed
+
+# We use debconf to remember the mysql root password before installing it
+- name: Set MySQL root password before installing
+  debconf: name='mysql-server' question='mysql-server/root_password' value='{{ mysql_root_password }}' vtype='password'
+  when: mysql_installed is defined and not mysql_installed.stat.exists
+
+- name: Re-enter MySQL root password before installing
+  debconf: name='mysql-server' question='mysql-server/root_password_again' value='{{ mysql_root_password }}' vtype='password'
+  when: mysql_installed is defined and not mysql_installed.stat.exists
+
+- name: Install MySQL-related packages
+  apt:
+    name: '{{ item }}'
+    state: 'latest'
+    install_recommends: False
+  register: mysql_install_status
+  with_items: [ 'python-mysqldb', 'mysql-server', 'automysqlbackup', 'ssl-cert' ]
+
+- name: Add MySQL system user to specified groups
+  user:
+    name: 'mysql'
+    groups: '{{ mysql_mysqld_append_groups | join(",") | default(omit) }}'
+    append: True
+    createhome: False
+  when: mysql_pki is defined and mysql_pki|bool
+  notify: [ 'Restart mysql' ]
+
+- name: Apply MySQL Server configuration
+  template:
+    src: 'etc/mysql/mysqld.cnf.j2'
+    dest: '/etc/mysql/conf.d/mysqld.cnf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify: [ 'Restart mysql' ]
+
+- name: Apply MySQL Client configuration
+  template:
+    src: 'etc/mysql/client.cnf.j2'
+    dest: '/etc/mysql/conf.d/client.cnf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify: [ 'Restart mysql' ]
+
+- name: Restart MySQL service on first install
+  service:
+    name: 'mysql'
+    state: 'restarted'
+  when: ((mysql_installed is defined and not mysql_installed.stat.exists) and
+         (mysql_install_status is defined and mysql_install_status.changed))
+
+
+# ---- Secure MySQL installation ----
+
+- name: Update mysql root password for all root accounts
+  mysql_user:
+    name: root
+    host: '{{ item }}'
+    password: "{{ mysql_root_password }}"
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    check_implicit_admin: yes
+    priv: "*.*:ALL,GRANT"
+  with_items: [ '{{ ansible_hostname }}', '127.0.0.1', '::1', 'localhost' ]
+  when: mysql_installed is defined and not mysql_installed.stat.exists
+
+- name: Create /root/.my.cnf file with root password credentials
+  template:
+    src: 'root/my.cnf.j2'
+    dest: '/root/.my.cnf'
+    owner: 'root'
+    group: 'root'
+    mode: '0600'
+  when: mysql_installed is defined and not mysql_installed.stat.exists
+
+- name: Delete anonymous mysql user
+  mysql_user:
+    user: ""
+    host: '{{ item }}'
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    state: 'absent'
+  with_items: [ '{{ ansible_hostname }}', 'localhost' ]
+
+- name: Remove test database
+  mysql_db:
+    db: 'test'
+    state: 'absent'
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+
+# ---- Manage MySQL databases and users ----
+
+- name: Manage MySQL databases
+  mysql_db:
+    name: '{{ item.name }}'
+    state: '{{ item.state | default("present") }}'
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+  with_items: mysql_databases
+  when: item.name is defined and item.name
+
+- name: Manage MySQL users
+  mysql_user:
+    name: '{{ item.name }}'
+    password: '{{ item.password | default(lookup("password", secret + "/credentials/" + ansible_fqdn + "/mysql/" + item.name + "/password chars=ascii_letters,digits,hexdigits length=" + mysql_password_length)) }}'
+    state: '{{ item.state | default("present") }}'
+    priv: '{{ item.priv | default(item.name + ".*:ALL") }}'
+    append_privs: '{{ item.append_privs | default("no") }}'
+    host: '{{ item.host | default("localhost") }}'
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+  with_items: mysql_users
+  when: (item.name is defined and item.name)
+
+- name: Restart MySQL service (again) after first configuration
+  service:
+    name: 'mysql'
+    state: 'restarted'
+  when: (mysql_installed is defined and not mysql_installed.stat.exists)
