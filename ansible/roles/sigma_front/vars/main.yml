@@ -1,0 +1,7 @@
+---
+nginx_sites:
+  sigma_front:
+     - listen "{{ sigma_front_server_port }} {{ sigma_front_server_name }}"
+     - server_name "{{ sigma_front_server_name }}"
+     - root "{{ sigma_front_dir }}"
+     - index index.html

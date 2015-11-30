@@ -1,0 +1,12 @@
+#!/bin/sh
+USERNAME="{{ sigma_front_user_name }}"
+SUDO_USER="{{ sigma_front_user_name }}"
+cd "{{ sigma_front_dir }}"
+killall npm
+
+if [ -e $1 ] ; then
+    cd $SERVER_PATH
+    screen -AmdS NodeJS ./setup_npm.sh screen
+else
+    npm start 1> npm.log 2> npm.err
+fi
