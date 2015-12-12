@@ -17,7 +17,7 @@ Vagrant.configure("2") do |django_config|
 
   # Config hostname and IP address so entry can be added to HOSTS file
   django_config.vm.hostname = "vagrant"
-  django_config.vm.network :private_network, ip: '192.168.87.1'
+  django_config.vm.network :private_network, ip: '192.168.87.7'
 
   # Forward a port from the guest to the host, which allows for outside
   # computers to access the VM, whereas host only networking does not.
