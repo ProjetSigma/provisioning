@@ -29,8 +29,6 @@ to launch the client:
     cd /vagrant/frontend
     npm start
 
-*Warning: the client is not provisioned yet*
-
 The backend and frontend will then be available at localhost:8000 and localhost:5555 on your host machine, and you can start coding as usual !
 
 To reprovision the vagrant in case provisioning changed:
