@@ -3,4 +3,14 @@ allow_duplicates: yes
 dependencies:
   - { role: nginx}
   - { role: base}
-
+  - { role: mysql_server_setup,
+        mysql_databases: [{name: "sigma_back", state: "present"}],
+        mysql_users: [{name: "{{ sigma_db_user }}",
+            host:           "localhost",
+            state:          "present",
+            password:       "{{ sigma_db_password }}",
+            priv:           "{{ sigma_db_dbname }}.*:ALL",
+            # Append the privileges defined by priv to the existing ones for this user instead of overwriting existing ones.
+            append_privs:   "no"
+            }]
+    }

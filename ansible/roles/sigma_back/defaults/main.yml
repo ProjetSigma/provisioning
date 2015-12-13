@@ -1,6 +1,6 @@
 ---
 # "_" is the joker symbol for nginx
-sigma_back_server_name: "ns399940.ip-5-196-68.eu"
+sigma_back_server_name: "_"
 sigma_back_http_port:   "80"
 sigma_back_https_port:  "443"
 sigma_back_setup_git:   "true"
@@ -16,8 +16,9 @@ application_log_dir:    "{{ virtualenv_path }}/logs"
 application_log_file:   "{{ application_log_dir }}/gunicorn_supervisor.log"
 requirements_file:      "{{ project_path }}/requirements.txt"
 django_settings_module: "{{ application_module }}.settings"
-db_user:                "sigma_back"
-db_password:            "FIXME"
+sigma_db_user:          "sigma_back"
+sigma_db_password:      "FIXME"
+sigma_db_dbname:        "{{ sigma_db_user }}"
 django_secret_key:      "FIXME"
 
 # Gunicorn settings
@@ -47,8 +48,8 @@ django_environment:
   SECRET_KEY:               "{{ django_secret_key }}"
   MEDIA_ROOT:               "{{ nginx_media_dir }}"
   STATIC_ROOT:              "{{ nginx_static_dir }}"
-  DATABASE_USER:            "{{ db_user }}"
-  DATABASE_PASSWORD:        "{{ db_password }}"
+  DATABASE_USER:            "{{ sigma_db_user }}"
+  DATABASE_PASSWORD:        "{{ sigma_db_password }}"
   EMAIL_HOST:               "{{ email_host|default(omit) }}"
   EMAIL_HOST_USER:          "{{ email_host_user|default(omit) }}"
   EMAIL_HOST_PASSWORD:      "{{ email_host_password|default(omit) }}"
