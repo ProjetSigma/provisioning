@@ -9,8 +9,8 @@ upstream {{ project_name }}_{{ application_module }}_wsgi_server {
 server {
     listen      {{ sigma_back_http_port }};
     server_name {{ sigma_back_server_name }};
-    {% if ssl_dest_dir is defined %} 
-    rewrite     ^ https://$server_name$request_uri? permanent;
+    {% if ssl_dest_dir is defined %}
+    rewrite     ^ https://$hostname$request_uri? permanent;
 }
 
 server {
@@ -41,12 +41,12 @@ server {
         }
 
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        {% if ssl_dest_dir is defined %} 
+        {% if ssl_dest_dir is defined %}
         proxy_set_header X-Forwarded-Proto https;
         {% else %}
         proxy_set_header X-Forwarded-Proto http;
         {% endif %}
-        
+
         proxy_set_header Host $http_host;
         proxy_redirect off;
 
