@@ -1,0 +1,5 @@
+mysql_server_setup:
+  description: 'Install and manage a MySQL server'
+  platforms:
+  - name: Ubuntu
+  - name: Debian
