@@ -4,3 +4,6 @@
 [submodule "ansible/roles/nodejs"]
 	path = ansible/roles/nodejs
 	url = https://github.com/AnsibleShipyard/ansible-nodejs.git
+[submodule "ansible/roles/memcached"]
+	path = ansible/roles/memcached
+	url = https://github.com/geerlingguy/ansible-role-memcached.git

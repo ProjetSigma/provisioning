@@ -1,0 +1,14 @@
+---
+
+- name: Setup the Git repo
+  git: repo={{ sigma_back_git_repo }}
+       version="{{ sigma_back_git_branch }}"
+       dest={{ project_path }}
+  when: sigma_back_setup_git is defined and sigma_back_setup_git
+  tags: git
+
+- name: Delete all .pyc files
+  command: find . -name '*.pyc' -delete
+  args:
+    chdir: "{{ project_path }}"
+  tags: git
