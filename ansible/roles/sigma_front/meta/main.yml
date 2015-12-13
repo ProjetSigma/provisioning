@@ -1,0 +1,6 @@
+---
+allow_duplicates: yes
+dependencies:
+  - { role: nginx}
+  - { role: nodejs, nodejs_version: "5.1.0"}
+

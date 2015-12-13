@@ -1,0 +1,8 @@
+---
+# "_" is the joker symbol for nginx
+sigma_front_server_name: "_"
+sigma_front_server_port: "80"
+sigma_front_git:         "https://github.com/ProjetSigma/frontend.git"
+sigma_front_dir:         "/var/www/sigma_front"
+sigma_front_user_name:   "sigma_front"
+sigma_front_production:  "no"

@@ -1,0 +1,39 @@
+---
+- name: Install required packages
+  apt:
+    name: '{{ item }}'
+    state: 'latest'
+    install_recommends: False
+  register: sigma_front_dependencies_installed
+  with_items: [ 'git' ]
+  tags: [packages,sigma_front]
+
+- name: Install node.js packages globally.
+  npm: name={{ item }} global=yes
+  with_items:
+    - gulp
+    - typescript
+  tags: [nodejs,sigma_front]
+
+- name: Setup git repository
+  git: repo="{{ sigma_front_git }}" dest="{{ sigma_front_dir }}" update=yes
+  when: sigma_front_dependencies_installed is defined
+  tags: [sigma_front]
+
+- name: Create {{sigma_front_user_name}} user
+  user: name="{{ sigma_front_user_name }}" comment="Created by Ansible" move_home=yes home="{{ sigma_front_dir }}"
+
+- name: Set correct owner for frontend files
+  file: path="{{ sigma_front_dir }}" owner="{{ sigma_front_user_name }}" group="{{ sigma_front_user_name }}" recurse=yes
+
+- name: Setup npm for this directory
+  become_user: "{{ sigma_front_user_name }}"
+  npm: state=latest path="{{ sigma_front_dir }}" production="{{ sigma_front_production }}"
+
+- name: Import NodeJS deploy script
+  become_user: "{{ sigma_front_user_name }}"
+  template: src=start_npm.sh.j2 dest="{{ sigma_front_dir }}/start_npm.sh" owner="{{ sigma_front_user_name }}" group="{{ sigma_front_user_name }}" mode=0755
+
+- name: Start or restart NodeJS
+  become_user: "{{ sigma_front_user_name }}"
+  command: "{{ sigma_front_dir }}/start_npm.sh"
