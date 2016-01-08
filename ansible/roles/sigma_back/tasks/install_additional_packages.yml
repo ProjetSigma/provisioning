@@ -1,0 +1,11 @@
+---
+
+- name: Install additional packages
+  apt: name={{ item }} update_cache={{ update_apt_cache }} force=yes state=installed
+  with_items:
+    - libav-tools
+    - libmysqlclient-dev
+    - libjpeg-dev
+    - python-imaging
+    - python3-pip
+    - python3-psycopg2

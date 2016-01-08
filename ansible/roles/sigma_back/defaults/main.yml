@@ -1,0 +1,56 @@
+---
+# "_" is the joker symbol for nginx
+sigma_back_server_name: "_"
+sigma_back_http_port:   "80"
+sigma_back_https_port:  "443"
+sigma_back_setup_git:   "true"
+sigma_back_git_repo:    "https://github.com/ProjetSigma/backend.git"
+sigma_back_git_branch:  "master"
+
+# Application settings.
+project_name:           "sigma_back"
+application_module:     "sigma"
+virtualenv_path:        "/var/www/{{ project_name }}"
+project_path:           "{{ virtualenv_path }}/{{ project_name }}"
+application_log_dir:    "{{ virtualenv_path }}/logs"
+application_log_file:   "{{ application_log_dir }}/gunicorn_supervisor.log"
+requirements_file:      "{{ project_path }}/requirements.txt"
+django_settings_module: "{{ application_module }}.settings"
+sigma_db_user:          "sigma_back"
+sigma_db_password:      "FIXME"
+sigma_db_dbname:        "{{ sigma_db_user }}"
+django_secret_key:      "FIXME"
+
+# Gunicorn settings
+gunicorn_user:          "{{ project_name }}"
+gunicorn_group:         webapps
+gunicorn_num_workers:   4
+# The maximum number of requests a worker will process before restarting.
+# 0 to disable
+gunicorn_max_requests:  1000
+
+# Nginx settings
+nginx_http_port:        80
+nginx_https_port:       443
+nginx_access_log_file:  "{{ application_log_dir }}/nginx_access.log"
+nginx_error_log_file:   "{{ application_log_dir }}/nginx_error.log"
+nginx_static_dir:       "{{ virtualenv_path }}/static/"
+nginx_media_dir:        "{{ virtualenv_path }}/media/"
+#ssl_crt:                "local_cert"
+#ssl_dest_dir:           "remote_cert"
+
+update_apt_cache:       "yes"
+
+
+# Django Environment variables
+django_environment:
+  DJANGO_SETTINGS_MODULE:   "{{ django_settings_module }}"
+  SECRET_KEY:               "{{ django_secret_key }}"
+  MEDIA_ROOT:               "{{ nginx_media_dir }}"
+  STATIC_ROOT:              "{{ nginx_static_dir }}"
+  DATABASE_USER:            "{{ sigma_db_user }}"
+  DATABASE_PASSWORD:        "{{ sigma_db_password }}"
+  EMAIL_HOST:               "{{ email_host|default(omit) }}"
+  EMAIL_HOST_USER:          "{{ email_host_user|default(omit) }}"
+  EMAIL_HOST_PASSWORD:      "{{ email_host_password|default(omit) }}"
+  BROKER_URL:               "{{ broker_url|default(omit) }}"
