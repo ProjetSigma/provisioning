@@ -31,6 +31,7 @@
     settings: "{{ django_settings_module }}"
     fixtures: "fixtures.json"
   environment: django_environment
+  when: load_django_fixtures is defined and load_django_fixtures
   tags: django.migrate
 
 - name: Run Django collectstatic

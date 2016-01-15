@@ -25,6 +25,8 @@ sigma_db_password:      "FIXME"
 sigma_db_dbname:        "{{ sigma_db_user }}"
 django_secret_key:      "FIXME"
 run_django_db_migrations: 1
+load_django_fixtures:     1
+run_django_collectstatic: 1
 
 # Gunicorn settings
 gunicorn_user:          "{{ project_name }}"
