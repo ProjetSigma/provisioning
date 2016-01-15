@@ -10,6 +10,7 @@ Vagrant.configure("2") do |config|
     p.customize ["modifyvm", :id, "--memory", 1024]
     p.customize ["modifyvm", :id, "--cpus", 1]
     # p.customize ["modifyvm", :id, "--cpuexecutioncap", 50]
+    p.name = "ProjetSigma"
   end
 
   # Configure a synced folder between HOST and GUEST
