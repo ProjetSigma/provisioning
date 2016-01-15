@@ -55,9 +55,9 @@ echo "${LINE_BREAK}"
 
 curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | sudo apt-key add -
 DISTRO="vivid"
-sudo sh -c "echo 'deb https://deb.nodesource.com/node_5.x ${DISTRO} main' > /etc/apt/sources.list.d/nodesource.list"
-sudo sh -c "echo 'deb-src https://deb.nodesource.com/node_5.x ${DISTRO} main' >> /etc/apt/sources.list.d/nodesource.list"
-apt-get install -yqq nodejs
+echo 'deb https://deb.nodesource.com/node_5.x ${DISTRO} main' > /etc/apt/sources.list.d/nodesource.list
+echo 'deb-src https://deb.nodesource.com/node_5.x ${DISTRO} main' >> /etc/apt/sources.list.d/nodesource.list
+apt-get install -yqq nodejs npm
 
 cd /vagrant/frontend
 # Remove old modules from previous install / host machine
