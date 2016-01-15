@@ -14,12 +14,17 @@ virtualenv_path:        "/var/www/{{ project_name }}"
 project_path:           "{{ virtualenv_path }}/{{ project_name }}"
 application_log_dir:    "{{ virtualenv_path }}/logs"
 application_log_file:   "{{ application_log_dir }}/gunicorn_supervisor.log"
-requirements_file:      "{{ project_path }}/requirements.txt"
+requirements_files:
+    - "{{ project_path }}/requirements/prod.txt"
+    - "{{ project_path }}/requirements/dev.txt"
+
 django_settings_module: "{{ application_module }}.settings"
+django_settings_file:   "{{ project_path }}/{{ application_module }}/settings.py"
 sigma_db_user:          "sigma_back"
 sigma_db_password:      "FIXME"
 sigma_db_dbname:        "{{ sigma_db_user }}"
 django_secret_key:      "FIXME"
+run_django_db_migrations: 1
 
 # Gunicorn settings
 gunicorn_user:          "{{ project_name }}"

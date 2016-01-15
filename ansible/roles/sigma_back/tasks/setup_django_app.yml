@@ -1,26 +1,36 @@
 ---
 
 - name: Install packages required by the Django app inside virtualenv
-  pip: executable=pip3 virtualenv={{ virtualenv_path }} requirements={{ requirements_file }}
+  pip: executable=pip3 virtualenv={{ virtualenv_path }} requirements={{ item }}
+  with_items: requirements_files
 
-- name: Run the Django syncdb command
-  django_manage:
-    command: syncdb
-    app_path: "{{ project_path }}"
-    virtualenv: "{{ virtualenv_path }}"
-    settings: "{{ django_settings_file }}"
-  environment: django_environment
-  when: run_django_syncdb is defined and run_django_syncdb
-  tags: django.syncdb
+- name: Create the Gunicorn script file
+  template: src=settings.py.j2
+            dest={{ django_settings_file }}
+            owner={{ gunicorn_user }}
+            group={{ gunicorn_group }}
+            mode=0755
+            backup=no
+  tags: deploy
 
 - name: Run Django database migrations
   django_manage:
     command: migrate
     app_path: "{{ project_path }}"
     virtualenv: "{{ virtualenv_path }}"
-    settings: "{{ django_settings_file }}"
+    settings: "{{ django_settings_module }}"
   environment: django_environment
   when: run_django_db_migrations is defined and run_django_db_migrations
+  tags: django.migrate
+
+- name: Load Django fixtures
+  django_manage:
+    command: loaddata
+    app_path: "{{ project_path }}"
+    virtualenv: "{{ virtualenv_path }}"
+    settings: "{{ django_settings_module }}"
+    fixtures: "fixtures.json"
+  environment: django_environment
   tags: django.migrate
 
 - name: Run Django collectstatic
@@ -28,7 +38,7 @@
     command: collectstatic
     app_path: "{{ project_path }}"
     virtualenv: "{{ virtualenv_path }}"
-    settings: "{{ django_settings_file }}"
+    settings: "{{ django_settings_module }}"
   environment: django_environment
   when: run_django_collectstatic is defined and run_django_collectstatic
   tags: django.collectstatic

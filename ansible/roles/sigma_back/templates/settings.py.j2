@@ -1,0 +1,10 @@
+from .settings_default import *
+
+DEBUG = True
+
+class contains_all_list(list):
+    def __contains__(self, key):
+        return True
+
+INTERNAL_IPS = contains_all_list()
+STATIC_ROOT = "{{ project_path }}/static/"
