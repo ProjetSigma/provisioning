@@ -1,4 +1,9 @@
 #!/bin/bash
+
+# export HTTP_PROXY="http://129.104.247.2:8080"
+# export HTTPS_PROXY="http://129.104.247.2:8080"
+# echo 'Acquire::http::Proxy "http://129.104.247.2:8080/";' >> /etc/apt/apt.conf
+
 export DEBIAN_FRONTEND=noninteractive
 echo 'Installing required packages...'
 curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | sudo apt-key add -
@@ -11,6 +16,15 @@ sudo apt-get -yqq install git python3-pip python-dev libmysqlclient-dev libjpeg-
   build-essential apt-transport-https nodejs
 
 cd /vagrant/backend
+echo "from .settings_default import *
+
+DEBUG = True
+
+class contains_all_list(list):
+    def __contains__(self, key):
+        return True
+
+INTERNAL_IPS = contains_all_list()" >> sigma/settings.py
 echo 'Installing pip dependencies...'
 sudo pip3 install -r requirements/dev.txt
 sudo pip3 install -r requirements/prod.txt
