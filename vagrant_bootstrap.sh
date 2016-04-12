@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# pour le proxy à polytechnique, lignes à décommenter si vous y êtes
+
 # export HTTP_PROXY="http://129.104.247.2:8080"
 # export HTTPS_PROXY="http://129.104.247.2:8080"
 # echo 'Acquire::http::Proxy "http://129.104.247.2:8080/";' >> /etc/apt/apt.conf

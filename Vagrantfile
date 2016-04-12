@@ -3,7 +3,8 @@
 
 Vagrant.configure("2") do |config|
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "ubuntu/vivid64"
+  config.vm.box = "ubuntu/trusty64"
+		# Hugo a choisi trusty parce qu'elle est dans atlas
 
   # Configure virtual machine specs. Keep it simple, single user.
   config.vm.provider :virtualbox do |p|
