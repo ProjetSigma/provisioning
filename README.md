@@ -13,7 +13,7 @@ To create and provision the vagrant:
 
     vagrant up
 
-Then, log in the vagrant:
+Then, log in the vagrant: (root avec le mot de passe "vagrant")
 
     vagrant ssh
 
