@@ -13,6 +13,7 @@
   with_items:
     - gulp
     - typescript
+    - ts-node
   tags: [nodejs,sigma_front]
 
 - name: Setup git repository
