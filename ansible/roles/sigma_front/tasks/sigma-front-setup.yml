@@ -29,8 +29,8 @@
 
 - name: Change base_url for API calls
   become_user: "{{ sigma_front_user_name }}"
-  lineinfile: dest="{{ sigma_front_dir }}/src/shared/services/rest-service.ts" regexp="^    protected this.base_url = '(http://localhost:8000/)';$" line="    protected this.base_url = '{{ sigma_front_api_url }}';"
-  lineinfile: dest="{{ sigma_front_dir }}/src/shared/services/auth-service.ts" regexp="^    protected this.base_url = '(http://localhost:8000/)';$" line="    protected this.base_url = '{{ sigma_front_api_url }}';"
+  lineinfile: dest="{{ sigma_front_dir }}/src/shared/services/rest-service.ts" regexp="^    protected base_url" line="    protected this.base_url = '{{ sigma_front_api_url }}';"
+  lineinfile: dest="{{ sigma_front_dir }}/src/shared/services/auth-service.ts" regexp="^    protected base_url" line="    protected this.base_url = '{{ sigma_front_api_url }}';"
 
 - name: Setup npm for this directory
   become_user: "{{ sigma_front_user_name }}"
