@@ -29,7 +29,7 @@
     app_path: "{{ project_path }}"
     virtualenv: "{{ virtualenv_path }}"
     settings: "{{ django_settings_module }}"
-    fixtures: "fixtures.json"
+    fixtures: "sigma_core/fixtures/fixtures_prod.json fixtures.json"
   environment: django_environment
   when: load_django_fixtures is defined and load_django_fixtures
   tags: django.migrate

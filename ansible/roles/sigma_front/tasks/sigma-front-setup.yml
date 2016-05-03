@@ -26,6 +26,11 @@
 - name: Set correct owner for frontend files
   file: path="{{ sigma_front_dir }}" owner="{{ sigma_front_user_name }}" group="{{ sigma_front_user_name }}" recurse=yes
 
+- name: Change base_url for API calls
+  become_user: "{{ sigma_front_user_name }}"
+  lineinfile: dest="{{ sigma_front_dir }}/src/shared/services/rest-service.ts" regexp="(base_url = ')(http://localhost:8000/)(';)$" line="\1{{ sigma_front_api_url }}\3"
+  lineinfile: dest="{{ sigma_front_dir }}/src/shared/services/auth-service.ts" regexp="(base_url = ')(http://localhost:8000/)(';)$" line="\1{{ sigma_front_api_url }}\3"
+
 - name: Setup npm for this directory
   become_user: "{{ sigma_front_user_name }}"
   npm: state=latest path="{{ sigma_front_dir }}" production="{{ sigma_front_production }}"
