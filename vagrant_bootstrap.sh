@@ -61,10 +61,11 @@ echo '# 4/6 Frontend setup - apt packages'
 echo "${LINE_BREAK}"
 
 curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | sudo apt-key add -
-DISTRO="vivid"
+DISTRO="trusty"
 echo "deb https://deb.nodesource.com/node_5.x ${DISTRO} main" > /etc/apt/sources.list.d/nodesource.list
 echo "deb-src https://deb.nodesource.com/node_5.x ${DISTRO} main" >> /etc/apt/sources.list.d/nodesource.list
-apt-get install -yqq nodejs npm
+apt-get update
+apt-get install -yqq nodejs
 
 cd /vagrant/frontend
 # Remove old modules from previous install / host machine
