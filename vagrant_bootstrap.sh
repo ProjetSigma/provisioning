@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x -e
+
 # pour le proxy à polytechnique, lignes à décommenter si vous y êtes
 
 # export HTTP_PROXY="http://129.104.247.2:8080"
