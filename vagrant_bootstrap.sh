@@ -33,13 +33,18 @@ class contains_all_list(list):
     def __contains__(self, key):
         return True
 
-INTERNAL_IPS = contains_all_list()" > sigma/settings.py
+INTERNAL_IPS = contains_all_list()
+
+MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+]" > sigma/settings.py
 
 echo "${LINE_BREAK_UP}"
 echo '# 2/6 Backend setup - pip requirements'
 echo "${LINE_BREAK}"
 
 sudo chown -R vagrant:vagrant /vagrant/backend
+pip3 install 'six>=1.10.0'
 pip3 install -r requirements/dev.txt
 pip3 install -r requirements/prod.txt
 
