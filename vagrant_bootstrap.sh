@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x -e
+
 # pour le proxy à polytechnique, lignes à décommenter si vous y êtes
 
 # export HTTP_PROXY="http://129.104.247.2:8080"
@@ -33,13 +35,18 @@ class contains_all_list(list):
     def __contains__(self, key):
         return True
 
-INTERNAL_IPS = contains_all_list()" > sigma/settings.py
+INTERNAL_IPS = contains_all_list()
+
+MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+]" > sigma/settings.py
 
 echo "${LINE_BREAK_UP}"
 echo '# 2/6 Backend setup - pip requirements'
 echo "${LINE_BREAK}"
 
 sudo chown -R vagrant:vagrant /vagrant/backend
+pip3 install 'six>=1.10.0'
 pip3 install -r requirements/dev.txt
 pip3 install -r requirements/prod.txt
 
@@ -56,10 +63,11 @@ echo '# 4/6 Frontend setup - apt packages'
 echo "${LINE_BREAK}"
 
 curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | sudo apt-key add -
-DISTRO="vivid"
-echo 'deb https://deb.nodesource.com/node_5.x ${DISTRO} main' > /etc/apt/sources.list.d/nodesource.list
-echo 'deb-src https://deb.nodesource.com/node_5.x ${DISTRO} main' >> /etc/apt/sources.list.d/nodesource.list
-apt-get install -yqq nodejs npm
+DISTRO="trusty"
+echo "deb https://deb.nodesource.com/node_5.x ${DISTRO} main" > /etc/apt/sources.list.d/nodesource.list
+echo "deb-src https://deb.nodesource.com/node_5.x ${DISTRO} main" >> /etc/apt/sources.list.d/nodesource.list
+apt-get update
+apt-get install -yqq nodejs
 
 cd /vagrant/frontend
 # Remove old modules from previous install / host machine
